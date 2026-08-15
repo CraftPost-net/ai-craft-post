@@ -9,7 +9,7 @@ AI Craft Post is a WordPress connector for the [CraftPost](https://craftpost.net
 - Supports Yoast SEO, Rank Math, and All in One SEO metadata.
 - Supports FAQ content and optional FAQPage structured data.
 - Supports multilingual content through Polylang.
-- Protects incoming requests with a site key, timestamp validation, and HMAC SHA-256 signatures.
+- Authenticates and signs incoming requests and protects them against replay attacks.
 
 ## Requirements
 
@@ -34,7 +34,7 @@ The plugin connects WordPress to the external CraftPost service after an adminis
 
 ## Ukrainian description
 
-AI Craft Post підключає WordPress-сайт до сервісу автоматизації контенту CraftPost. Плагін може створювати й оновлювати матеріали, завантажувати зображення, записувати SEO-дані, додавати FAQ та працювати з перекладами Polylang. Запити захищені ключем сайту, перевіркою часу та HMAC-підписом.
+AI Craft Post підключає WordPress-сайт до сервісу автоматизації контенту CraftPost. Плагін може створювати й оновлювати матеріали, завантажувати зображення, записувати SEO-дані, додавати FAQ та працювати з перекладами Polylang. Вхідні запити проходять автентифікацію, перевірку підпису та захист від повторного відтворення.
 
 ## Development and releases
 

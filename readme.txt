@@ -24,7 +24,7 @@ The plugin can:
 * Create and update multilingual content when Polylang is active.
 * Refresh existing articles through approved CraftPost operations.
 
-Every incoming CraftPost request is protected by a site-specific key, timestamp validation, and an HMAC signature.
+Incoming CraftPost requests are authenticated, signed, and protected against replay attacks.
 
 An account on CraftPost and a site connection key are required to use the service. The plugin does not create content by itself and does not connect to CraftPost until an administrator configures a site key.
 
@@ -68,7 +68,7 @@ No. Content is prepared by the CraftPost service and delivered to WordPress thro
 
 = How are incoming requests protected? =
 
-Requests require a site-specific bearer key, a timestamp no more than five minutes old, and a valid HMAC SHA-256 signature.
+Incoming requests are authenticated, signed, and protected against replay attacks.
 
 = Which SEO plugins are supported? =
 
