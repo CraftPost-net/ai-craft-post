@@ -1359,7 +1359,7 @@ class AI_Craft_Post_Webhook_Handler
         $heading_position = -1;
         $updated = preg_replace_callback('/((<!--\s*wp:heading(?:\s+\{.*?\})?\s*-->\s*)?<h([23])\b[^>]*>(.*?)<\/h\3>(?:(?:\s*<!--\s*\/wp:heading\s*-->)|(?!\s*<!--\s*\/wp:heading\s*-->)))(.*?)(?=(?:<!--\s*wp:heading(?:\s+\{.*?\})?\s*-->\s*)?<h[23]\b|$)/uis', function ($matches) use (&$normalized_packs, &$heading_position) {
             $heading_block = $matches[1];
-            $section_content = $matches[6] ?? '';
+            $section_content = $matches[5] ?? '';
             $heading_position++;
             $heading_level = intval($matches[3] ?? 2);
             $heading_text = $this->normalize_heading_text($matches[4] ?? '');
@@ -1418,7 +1418,7 @@ class AI_Craft_Post_Webhook_Handler
             $variant = sanitize_html_class($item['variant'] ?? 'variant');
             $alt_text = sanitize_text_field($item['alt_text'] ?? ($heading_text ?: 'Section image'));
             $alt = esc_attr($alt_text);
-            $image_html = '<figure class="wp-block-image size-large ai-craft-post-section-image ' . $variant . '">';
+            $image_html = '<figure class="wp-block-image size-large post-section-image ' . $variant . '">';
             $image_html .= '<img src="' . $local_url . '" alt="' . $alt . '" class="wp-image-' . $attachment_id . '"/>';
             $image_html .= '</figure>';
             $output .= serialize_block(array(
@@ -1427,7 +1427,7 @@ class AI_Craft_Post_Webhook_Handler
                     'id' => $attachment_id,
                     'sizeSlug' => 'large',
                     'linkDestination' => 'none',
-                    'className' => 'ai-craft-post-section-image ' . $variant,
+                    'className' => 'post-section-image ' . $variant,
                 ),
                 'innerBlocks' => array(),
                 'innerHTML' => $image_html,

@@ -3,7 +3,7 @@
  * Plugin Name: AI Craft Post
  * Plugin URI: https://craftpost.net/
  * Description: Secure receiver plugin for AI Craft Post webhooks.
- * Version: 1.3.8
+ * Version: 1.3.9
  * Requires at least: 6.2
  * Requires PHP: 7.4
  * Author: AI Craft Post
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('AI_CRAFT_POST_VERSION', '1.3.8');
+define('AI_CRAFT_POST_VERSION', '1.3.9');
 define('AI_CRAFT_POST_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('AI_CRAFT_POST_PLUGIN_PATH', plugin_dir_path(__FILE__));
 define('AI_CRAFT_POST_SITE_KEY_OPTION', 'ai_craft_post_site_key');
