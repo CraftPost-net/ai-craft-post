@@ -508,12 +508,23 @@ class AI_Craft_Post_Webhook_Handler
 
             if (!empty($params['preserve_inline_images'])) {
                 $preserved_images = array();
-                if (preg_match_all('/<figure\b[^>]*>.*?<img\b[^>]*>.*?<\/figure>/isu', (string) $post->post_content, $image_matches)) {
-                    $preserved_images = array_values(array_filter(array_map('trim', $image_matches[0])));
+                $pending_blocks = parse_blocks((string) $post->post_content);
+                while (!empty($pending_blocks)) {
+                    $source_block = array_shift($pending_blocks);
+                    if (!is_array($source_block)) continue;
+                    $block_name = (string) ($source_block['blockName'] ?? '');
+                    if (in_array($block_name, array('core/image', 'core/gallery', 'core/media-text', 'core/cover'), true)) {
+                        $serialized_image_block = trim(serialize_block($source_block));
+                        if ($serialized_image_block !== '') $preserved_images[] = $serialized_image_block;
+                        continue;
+                    }
+                    foreach ((array) ($source_block['innerBlocks'] ?? array()) as $inner_block) {
+                        $pending_blocks[] = $inner_block;
+                    }
                 }
                 if (!empty($preserved_images)) {
                     $preserved_index = 0;
-                    $updated_content = preg_replace_callback('/<h[23]\b[^>]*>.*?<\/h[23]>/isu', function ($heading) use (&$preserved_index, $preserved_images) {
+                    $updated_content = preg_replace_callback('/((?:<!--\s*wp:heading(?:\s+\{.*?\})?\s*-->\s*)?<h[23]\b[^>]*>.*?<\/h[23]>(?:(?:\s*<!--\s*\/wp:heading\s*-->)|(?!\s*<!--\s*\/wp:heading\s*-->)))/isu', function ($heading) use (&$preserved_index, $preserved_images) {
                         if (!isset($preserved_images[$preserved_index])) return $heading[0];
                         return $heading[0] . "\n" . $preserved_images[$preserved_index++];
                     }, $updated_content);
@@ -651,12 +662,23 @@ class AI_Craft_Post_Webhook_Handler
                 $translated_post = $translated_post_id > 0 ? get_post($translated_post_id) : null;
                 if (!empty($params['preserve_inline_images']) && $translated_post instanceof WP_Post) {
                     $translated_images = array();
-                    if (preg_match_all('/<figure\b[^>]*>.*?<img\b[^>]*>.*?<\/figure>/isu', (string) $translated_post->post_content, $translated_image_matches)) {
-                        $translated_images = array_values(array_filter(array_map('trim', $translated_image_matches[0])));
+                    $pending_translation_blocks = parse_blocks((string) $translated_post->post_content);
+                    while (!empty($pending_translation_blocks)) {
+                        $translation_block = array_shift($pending_translation_blocks);
+                        if (!is_array($translation_block)) continue;
+                        $translation_block_name = (string) ($translation_block['blockName'] ?? '');
+                        if (in_array($translation_block_name, array('core/image', 'core/gallery', 'core/media-text', 'core/cover'), true)) {
+                            $serialized_translation_image_block = trim(serialize_block($translation_block));
+                            if ($serialized_translation_image_block !== '') $translated_images[] = $serialized_translation_image_block;
+                            continue;
+                        }
+                        foreach ((array) ($translation_block['innerBlocks'] ?? array()) as $translation_inner_block) {
+                            $pending_translation_blocks[] = $translation_inner_block;
+                        }
                     }
                     if (!empty($translated_images)) {
                         $translated_image_index = 0;
-                        $translated_content = preg_replace_callback('/<h[23]\b[^>]*>.*?<\/h[23]>/isu', function ($heading) use (&$translated_image_index, $translated_images) {
+                        $translated_content = preg_replace_callback('/((?:<!--\s*wp:heading(?:\s+\{.*?\})?\s*-->\s*)?<h[23]\b[^>]*>.*?<\/h[23]>(?:(?:\s*<!--\s*\/wp:heading\s*-->)|(?!\s*<!--\s*\/wp:heading\s*-->)))/isu', function ($heading) use (&$translated_image_index, $translated_images) {
                             if (!isset($translated_images[$translated_image_index])) return $heading[0];
                             return $heading[0] . "\n" . $translated_images[$translated_image_index++];
                         }, $translated_content);
@@ -1335,7 +1357,7 @@ class AI_Craft_Post_Webhook_Handler
         }
 
         $heading_position = -1;
-        $updated = preg_replace_callback('/((<!--\s*wp:heading(?:\s+\{.*?\})?\s*-->\s*)?<h([23])\b[^>]*>(.*?)<\/h\3>(\s*<!--\s*\/wp:heading\s*-->)?)(.*?)(?=(?:<!--\s*wp:heading(?:\s+\{.*?\})?\s*-->\s*)?<h[23]\b|$)/uis', function ($matches) use (&$normalized_packs, &$heading_position) {
+        $updated = preg_replace_callback('/((<!--\s*wp:heading(?:\s+\{.*?\})?\s*-->\s*)?<h([23])\b[^>]*>(.*?)<\/h\3>(?:(?:\s*<!--\s*\/wp:heading\s*-->)|(?!\s*<!--\s*\/wp:heading\s*-->)))(.*?)(?=(?:<!--\s*wp:heading(?:\s+\{.*?\})?\s*-->\s*)?<h[23]\b|$)/uis', function ($matches) use (&$normalized_packs, &$heading_position) {
             $heading_block = $matches[1];
             $section_content = $matches[6] ?? '';
             $heading_position++;
@@ -1396,10 +1418,21 @@ class AI_Craft_Post_Webhook_Handler
             $variant = sanitize_html_class($item['variant'] ?? 'variant');
             $alt_text = sanitize_text_field($item['alt_text'] ?? ($heading_text ?: 'Section image'));
             $alt = esc_attr($alt_text);
-            $output .= '<!-- wp:image {"id":' . $attachment_id . ',"sizeSlug":"large","linkDestination":"none","className":"ai-craft-post-section-image ' . $variant . '"} -->';
-            $output .= '<figure class="wp-block-image size-large ai-craft-post-section-image ' . $variant . '">';
-            $output .= '<img src="' . $local_url . '" alt="' . $alt . '" class="wp-image-' . $attachment_id . '"/>';
-            $output .= '</figure><!-- /wp:image -->';
+            $image_html = '<figure class="wp-block-image size-large ai-craft-post-section-image ' . $variant . '">';
+            $image_html .= '<img src="' . $local_url . '" alt="' . $alt . '" class="wp-image-' . $attachment_id . '"/>';
+            $image_html .= '</figure>';
+            $output .= serialize_block(array(
+                'blockName' => 'core/image',
+                'attrs' => array(
+                    'id' => $attachment_id,
+                    'sizeSlug' => 'large',
+                    'linkDestination' => 'none',
+                    'className' => 'ai-craft-post-section-image ' . $variant,
+                ),
+                'innerBlocks' => array(),
+                'innerHTML' => $image_html,
+                'innerContent' => array($image_html),
+            ));
         }
 
         return $output;

@@ -3,7 +3,7 @@
  * Plugin Name: AI Craft Post
  * Plugin URI: https://craftpost.net/
  * Description: Secure receiver plugin for AI Craft Post webhooks.
- * Version: 1.3.7
+ * Version: 1.3.8
  * Requires at least: 6.2
  * Requires PHP: 7.4
  * Author: AI Craft Post
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('AI_CRAFT_POST_VERSION', '1.3.7');
+define('AI_CRAFT_POST_VERSION', '1.3.8');
 define('AI_CRAFT_POST_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('AI_CRAFT_POST_PLUGIN_PATH', plugin_dir_path(__FILE__));
 define('AI_CRAFT_POST_SITE_KEY_OPTION', 'ai_craft_post_site_key');
@@ -110,7 +110,7 @@ class AI_Craft_Post_Plugin
      */
     public function add_plugin_action_links($links)
     {
-        $settings_link = '<a href="' . esc_url(admin_url('tools.php?page=ai-craft-post')) . '">' . esc_html__('Settings', 'ai-craft-post') . '</a>';
+        $settings_link = '<a href="' . esc_url(admin_url('tools.php?page=ai-craft-post')) . '" target="_blank" rel="noopener noreferrer">' . esc_html__('Settings', 'ai-craft-post') . '</a>';
         $key_link = '<a href="' . esc_url(AI_CRAFT_POST_DASHBOARD_URL) . '" target="_blank" rel="noopener noreferrer">' . esc_html__('Get key', 'ai-craft-post') . '</a>';
 
         array_unshift($links, $settings_link, $key_link);
@@ -174,7 +174,7 @@ class AI_Craft_Post_Plugin
             return;
         }
 
-        $policy_text = '<p class="privacy-policy-tutorial">' . wp_kses_post(__('AI Craft Post connects this website to the external CraftPost service after an administrator configures a site key. CraftPost may retrieve site configuration, WordPress user account identifiers and roles, post metadata, post content, taxonomy data, media settings, and supported plugin information to create, update, translate, or refresh website content. CraftPost may send generated content and remote image URLs back to this website. Downloading a remote image also sends a request from the website server to the host of that image. The site key is stored in the WordPress options table. Review the <a href="https://craftpost.net/privacy-policy/">CraftPost Privacy Policy</a> and <a href="https://craftpost.net/terms-of-service/">Terms of Service</a> for details about processing and retention.', 'ai-craft-post')) . '</p>';
+        $policy_text = '<p class="privacy-policy-tutorial">' . wp_kses_post(__('AI Craft Post connects this website to the external CraftPost service after an administrator configures a site key. CraftPost may retrieve site configuration, WordPress user account identifiers and roles, post metadata, post content, taxonomy data, media settings, and supported plugin information to create, update, translate, or refresh website content. CraftPost may send generated content and remote image URLs back to this website. Downloading a remote image also sends a request from the website server to the host of that image. The site key is stored in the WordPress options table. Review the <a href="https://craftpost.net/privacy.html" target="_blank" rel="noopener noreferrer">CraftPost Privacy Policy</a> and <a href="https://craftpost.net/terms.html" target="_blank" rel="noopener noreferrer">Terms of Service</a> for details about processing and retention.', 'ai-craft-post')) . '</p>';
 
         wp_add_privacy_policy_content(
             __('AI Craft Post', 'ai-craft-post'),
@@ -249,7 +249,7 @@ class AI_Craft_Post_Plugin
             <p class="description">
                 <?php echo esc_html__('Questions shown after the post content.', 'ai-craft-post'); ?>
                 <?php echo esc_html__('The FAQPage schema enabled in', 'ai-craft-post'); ?>
-                <a href="<?php echo esc_url(admin_url('tools.php?page=ai-craft-post')); ?>"><?php echo esc_html__('AI Craft Post settings', 'ai-craft-post'); ?></a>.
+                <a href="<?php echo esc_url(admin_url('tools.php?page=ai-craft-post')); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html__('AI Craft Post settings', 'ai-craft-post'); ?></a>.
             </p>
             <p>
                 <label>

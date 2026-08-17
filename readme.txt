@@ -4,7 +4,7 @@ Tags: AI content, content automation, SEO, FAQ, Polylang
 Requires at least: 6.2
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.3.7
+Stable tag: 1.3.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -42,7 +42,13 @@ After an administrator creates a connection and configures the site key, authent
 
 CraftPost may send generated or updated article content, metadata, translations, FAQ items, and remote image URLs to the website. Remote images are downloaded from the supplied image host into the WordPress Media Library. That image host receives a request from the website server during the download.
 
-The service is used only after the website administrator configures a CraftPost site key. For information about data handling and retention, review the [CraftPost Privacy Policy](https://craftpost.net/privacy-policy/) and [CraftPost Terms of Service](https://craftpost.net/terms-of-service/).
+The service is used only after the website administrator configures a CraftPost site key. For information about data handling and retention, review the [CraftPost Privacy Policy](https://craftpost.net/privacy.html) and [CraftPost Terms of Service](https://craftpost.net/terms.html).
+
+= Instruction video =
+
+Watch the CraftPost setup and usage guide:
+
+https://kinescope.io/embed/9z1h5x44N1cnxRaYmfW7rR
 
 == Installation ==
 
@@ -91,6 +97,11 @@ Yes. Deactivate the plugin to disable its REST routes. You can also replace the 
 
 == Changelog ==
 
+= 1.3.8 =
+
+* Preserved native Gutenberg image blocks during article refreshes.
+* Generated section images as valid Gutenberg blocks.
+
 = 1.3.7 =
 
 * Improved image processing compatibility and optimization handling.
@@ -99,6 +110,10 @@ Yes. Deactivate the plugin to disable its REST routes. You can also replace the 
 * Improved translated FAQ handling.
 
 == Upgrade Notice ==
+
+= 1.3.8 =
+
+Improves Gutenberg compatibility for preserved and generated article images.
 
 = 1.3.7 =
 
