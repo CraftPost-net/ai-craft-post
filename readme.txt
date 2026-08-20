@@ -1,10 +1,10 @@
-=== AI Craft Post ===
+=== CraftPost Site Connector ===
 Contributors: craftpost
 Tags: AI content, content automation, SEO, FAQ, Polylang
 Requires at least: 6.2
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.3.9
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,7 @@ Connect WordPress to CraftPost and securely receive AI-assisted articles, images
 
 == Description ==
 
-AI Craft Post connects your WordPress website to the CraftPost content automation service through authenticated REST API webhooks.
+CraftPost Site Connector connects your WordPress website to the CraftPost content automation service through authenticated REST API webhooks.
 
 The plugin can:
 
@@ -53,10 +53,10 @@ https://kinescope.io/embed/9z1h5x44N1cnxRaYmfW7rR
 == Installation ==
 
 1. Upload the `ai-craft-post` folder to `/wp-content/plugins/`, or install the plugin ZIP from **Plugins > Add New > Upload Plugin**.
-2. Activate **AI Craft Post**.
+2. Activate **CraftPost Site Connector**.
 3. Sign in to your CraftPost account and add the WordPress website.
 4. Copy the generated `aic_live` site key.
-5. In WordPress, open **Tools > AI Craft Post**.
+5. In WordPress, open **Tools > CraftPost Site Connector**.
 6. Paste the site key and save the settings.
 7. Choose the optional SEO and FAQ settings required for the website.
 
@@ -66,7 +66,7 @@ Use HTTPS on both the WordPress website and CraftPost account.
 
 = Is a CraftPost account required? =
 
-Yes. AI Craft Post is a connector for the external CraftPost service. A CraftPost account and a site key are required.
+Yes. CraftPost Site Connector is a connector for the external CraftPost service. A CraftPost account and a site key are required.
 
 = Does the plugin generate content inside WordPress? =
 
@@ -86,16 +86,27 @@ Yes. The plugin can connect translated posts when Polylang is installed and conf
 
 = Can I disable the connection? =
 
-Yes. Deactivate the plugin to disable its REST routes. You can also replace the site key from **Tools > AI Craft Post**.
+Yes. Deactivate the plugin to disable its REST routes. You can also replace the site key from **Tools > CraftPost Site Connector**.
 
 == Screenshots ==
 
-1. AI Craft Post connection and site-key settings.
+1. CraftPost Site Connector connection and site-key settings.
 2. SEO integration settings.
 3. FAQ display and structured-data settings.
 4. FAQ editor metabox.
 
 == Changelog ==
+
+= 1.4.0 =
+
+* Renamed plugin to CraftPost Site Connector.
+* Updated all remaining user-facing labels to CraftPost Site Connector (admin menu, settings, privacy policy, site-info payload, readme).
+* Replaced inline &lt;script&gt; in the FAQ metabox with a properly enqueued script via wp_enqueue_script and wp_localize_script.
+* Replaced inline &lt;style&gt; in post content with wp_enqueue_style and wp_add_inline_style.
+
+= 1.3.9 =
+
+* Maintenance release.
 
 = 1.3.8 =
 
@@ -110,6 +121,10 @@ Yes. Deactivate the plugin to disable its REST routes. You can also replace the 
 * Improved translated FAQ handling.
 
 == Upgrade Notice ==
+
+= 1.4.0 =
+
+Renamed to CraftPost Site Connector. Moves inline scripts and styles to properly enqueued assets. Safe upgrade — all existing settings and data are preserved.
 
 = 1.3.8 =
 

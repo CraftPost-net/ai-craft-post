@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name: AI Craft Post
+ * Plugin Name: CraftPost Site Connector
  * Plugin URI: https://craftpost.net/
- * Description: Secure receiver plugin for AI Craft Post webhooks.
- * Version: 1.3.9
+ * Description: Secure receiver and connector plugin for CraftPost content automation service.
+ * Version: 1.4.0
  * Requires at least: 6.2
  * Requires PHP: 7.4
- * Author: AI Craft Post
+ * Author: CraftPost
  * Author URI: https://craftpost.net
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('AI_CRAFT_POST_VERSION', '1.3.9');
+define('AI_CRAFT_POST_VERSION', '1.4.0');
 define('AI_CRAFT_POST_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('AI_CRAFT_POST_PLUGIN_PATH', plugin_dir_path(__FILE__));
 define('AI_CRAFT_POST_SITE_KEY_OPTION', 'ai_craft_post_site_key');
@@ -72,6 +72,8 @@ class AI_Craft_Post_Plugin
         add_action('admin_menu', array($this, 'add_admin_menu'));
         add_action('admin_init', array($this, 'register_settings'));
         add_action('admin_init', array($this, 'register_privacy_policy_content'));
+        add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
+        add_action('wp_enqueue_scripts', array($this, 'enqueue_frontend_scripts'));
         add_filter('plugin_action_links_' . plugin_basename(__FILE__), array($this, 'add_plugin_action_links'));
         add_action('rest_api_init', array($this, 'register_rest_routes'));
         add_action('add_meta_boxes', array($this, 'add_faq_schema_meta_box'));
@@ -91,14 +93,66 @@ class AI_Craft_Post_Plugin
     }
 
     /**
+     * Enqueue admin assets.
+     */
+    public function enqueue_admin_scripts($hook)
+    {
+        if (!in_array($hook, array('post.php', 'post-new.php'), true)) {
+            return;
+        }
+
+        if (!(bool) get_option(AI_CRAFT_POST_FAQ_METABOX_ENABLED_OPTION, false)) {
+            return;
+        }
+
+        wp_enqueue_script(
+            'craftpost-admin-faq-metabox',
+            AI_CRAFT_POST_PLUGIN_URL . 'assets/js/admin-faq-metabox.js',
+            array(),
+            AI_CRAFT_POST_VERSION,
+            true
+        );
+
+        wp_localize_script('craftpost-admin-faq-metabox', 'craftpostFaqI18n', array(
+            'question'    => __('Question', 'ai-craft-post'),
+            'answer'      => __('Answer', 'ai-craft-post'),
+            'remove'      => __('Remove', 'ai-craft-post'),
+            'notFound'    => __('FAQ block was not found in content.', 'ai-craft-post'),
+            'movedSuffix' => __('question(s) moved. Save or update the post to keep changes.', 'ai-craft-post'),
+        ));
+    }
+
+    /**
+     * Enqueue frontend scripts and styles.
+     */
+    public function enqueue_frontend_scripts()
+    {
+        wp_register_style(
+            'craftpost-faq-style',
+            AI_CRAFT_POST_PLUGIN_URL . 'assets/css/faq.css',
+            array(),
+            AI_CRAFT_POST_VERSION
+        );
+
+        $faq_css = (string) get_option(AI_CRAFT_POST_FAQ_CSS_OPTION, AI_CRAFT_POST_DEFAULT_FAQ_CSS);
+        if ($faq_css !== '') {
+            wp_add_inline_style('craftpost-faq-style', wp_strip_all_tags($faq_css));
+        }
+
+        if (is_singular()) {
+            wp_enqueue_style('craftpost-faq-style');
+        }
+    }
+
+    /**
      * Add the plugin settings page.
      */
     public function add_admin_menu()
     {
         add_submenu_page(
             'tools.php',
-            __('AI Craft Post', 'ai-craft-post'),
-            __('AI Craft Post', 'ai-craft-post'),
+            __('CraftPost Site Connector', 'ai-craft-post'),
+            __('CraftPost Site Connector', 'ai-craft-post'),
             'manage_options',
             'ai-craft-post',
             array($this, 'render_admin_page')
@@ -174,10 +228,10 @@ class AI_Craft_Post_Plugin
             return;
         }
 
-        $policy_text = '<p class="privacy-policy-tutorial">' . wp_kses_post(__('AI Craft Post connects this website to the external CraftPost service after an administrator configures a site key. CraftPost may retrieve site configuration, WordPress user account identifiers and roles, post metadata, post content, taxonomy data, media settings, and supported plugin information to create, update, translate, or refresh website content. CraftPost may send generated content and remote image URLs back to this website. Downloading a remote image also sends a request from the website server to the host of that image. The site key is stored in the WordPress options table. Review the <a href="https://craftpost.net/privacy.html" target="_blank" rel="noopener noreferrer">CraftPost Privacy Policy</a> and <a href="https://craftpost.net/terms.html" target="_blank" rel="noopener noreferrer">Terms of Service</a> for details about processing and retention.', 'ai-craft-post')) . '</p>';
+        $policy_text = '<p class="privacy-policy-tutorial">' . wp_kses_post(__('CraftPost Site Connector connects this website to the external CraftPost service after an administrator configures a site key. CraftPost may retrieve site configuration, WordPress user account identifiers and roles, post metadata, post content, taxonomy data, media settings, and supported plugin information to create, update, translate, or refresh website content. CraftPost may send generated content and remote image URLs back to this website. Downloading a remote image also sends a request from the website server to the host of that image. The site key is stored in the WordPress options table. Review the <a href="https://craftpost.net/privacy.html" target="_blank" rel="noopener noreferrer">CraftPost Privacy Policy</a> and <a href="https://craftpost.net/terms.html" target="_blank" rel="noopener noreferrer">Terms of Service</a> for details about processing and retention.', 'ai-craft-post')) . '</p>';
 
         wp_add_privacy_policy_content(
-            __('AI Craft Post', 'ai-craft-post'),
+            __('CraftPost Site Connector', 'ai-craft-post'),
             wp_kses_post(wpautop($policy_text, false))
         );
     }
@@ -249,7 +303,7 @@ class AI_Craft_Post_Plugin
             <p class="description">
                 <?php echo esc_html__('Questions shown after the post content.', 'ai-craft-post'); ?>
                 <?php echo esc_html__('The FAQPage schema enabled in', 'ai-craft-post'); ?>
-                <a href="<?php echo esc_url(admin_url('tools.php?page=ai-craft-post')); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html__('AI Craft Post settings', 'ai-craft-post'); ?></a>.
+                <a href="<?php echo esc_url(admin_url('tools.php?page=ai-craft-post')); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html__('CraftPost Site Connector settings', 'ai-craft-post'); ?></a>.
             </p>
             <p>
                 <label>
@@ -284,204 +338,6 @@ class AI_Craft_Post_Plugin
             <button type="button" class="button" id="ai-craft-post-move-faq-from-content"><?php echo esc_html__('Move FAQ from content', 'ai-craft-post'); ?></button>
             <span id="ai-craft-post-faq-status" style="margin-left: 8px;"></span>
         </div>
-        <script>
-            (function () {
-                var box = document.getElementById('ai-craft-post-faq-schema-box');
-                if (!box) {
-                    return;
-                }
-
-                var items = document.getElementById('ai-craft-post-faq-schema-items');
-                var titleInput = document.getElementById('ai-craft-post-faq-title');
-                var addButton = document.getElementById('ai-craft-post-add-faq-item');
-                var moveButton = document.getElementById('ai-craft-post-move-faq-from-content');
-                var status = document.getElementById('ai-craft-post-faq-status');
-
-                function renumberItems() {
-                    var rows = items.querySelectorAll('.ai-craft-post-faq-schema-item');
-                    rows.forEach(function (row, index) {
-                        var question = row.querySelector('[data-faq-field="question"]');
-                        var answer = row.querySelector('[data-faq-field="answer"]');
-                        if (question) {
-                            question.name = 'ai_craft_post_faq_schema[' + index + '][question]';
-                        }
-                        if (answer) {
-                            answer.name = 'ai_craft_post_faq_schema[' + index + '][answer]';
-                        }
-                    });
-                }
-
-                function createItem(questionValue, answerValue) {
-                    var row = document.createElement('div');
-                    row.className = 'ai-craft-post-faq-schema-item';
-                    row.style.cssText = 'margin: 0 0 14px; padding: 12px; border: 1px solid #dcdcde; background: #fff;';
-                    row.innerHTML = '<p style="margin-top: 0;"><label><strong><?php echo esc_js(__('Question', 'ai-craft-post')); ?></strong><input type="text" data-faq-field="question" class="widefat" /></label></p><p><label><strong><?php echo esc_js(__('Answer', 'ai-craft-post')); ?></strong><textarea data-faq-field="answer" rows="4" class="widefat"></textarea></label></p><button type="button" class="button ai-craft-post-remove-faq-item"><?php echo esc_js(__('Remove', 'ai-craft-post')); ?></button>';
-                    items.appendChild(row);
-                    row.querySelector('[data-faq-field="question"]').value = questionValue || '';
-                    row.querySelector('[data-faq-field="answer"]').value = answerValue || '';
-                    renumberItems();
-                }
-
-                function stripTags(html) {
-                    var container = document.createElement('div');
-                    container.innerHTML = html || '';
-                    return (container.textContent || container.innerText || '').replace(/\s+/g, ' ').trim();
-                }
-
-                function getEditorContent() {
-                    if (window.wp && wp.data && wp.data.select('core/editor')) {
-                        return wp.data.select('core/editor').getEditedPostContent();
-                    }
-
-                    if (window.tinyMCE && tinyMCE.get('content') && !tinyMCE.get('content').isHidden()) {
-                        return tinyMCE.get('content').getContent();
-                    }
-
-                    var textarea = document.getElementById('content');
-                    return textarea ? textarea.value : '';
-                }
-
-                function setEditorContent(content) {
-                    if (window.wp && wp.data && wp.data.dispatch('core/editor')) {
-                        wp.data.dispatch('core/editor').editPost({ content: content });
-                        return;
-                    }
-
-                    if (window.tinyMCE && tinyMCE.get('content') && !tinyMCE.get('content').isHidden()) {
-                        tinyMCE.get('content').setContent(content);
-                        return;
-                    }
-
-                    var textarea = document.getElementById('content');
-                    if (textarea) {
-                        textarea.value = content;
-                    }
-                }
-
-                function extractFaqFromContent(content) {
-                    var headingPattern = /((?:<!--\s*wp:heading(?:\s+\{.*?\})?\s*-->\s*)?<h2\b[^>]*>[\s\S]*?<\/h2>\s*(?:<!--\s*\/wp:heading\s*-->\s*)?)/gi;
-                    var headings = [];
-                    var match;
-                    while ((match = headingPattern.exec(content)) !== null) {
-                        headings.push({
-                            html: match[0],
-                            index: match.index,
-                            end: match.index + match[0].length,
-                            text: stripTags(match[0]).toLowerCase()
-                        });
-                    }
-
-                    var faqHeadingIndex = -1;
-                    for (var i = 0; i < headings.length; i++) {
-                        if (/\bfaq\b|поширен|част[іи]|питан|вопрос|часто задаваем/u.test(headings[i].text)) {
-                            faqHeadingIndex = i;
-                            break;
-                        }
-                    }
-
-                    if (faqHeadingIndex < 0) {
-                        return { content: content, items: [], title: '' };
-                    }
-
-                    var start = headings[faqHeadingIndex].index;
-                    var end = headings[faqHeadingIndex + 1] ? headings[faqHeadingIndex + 1].index : content.length;
-                    var section = content.slice(start, end);
-                    var title = stripTags(headings[faqHeadingIndex].html);
-                    var questionPattern = /((?:<!--\s*wp:heading(?:\s+\{.*?\})?\s*-->\s*)?<h[34]\b[^>]*>[\s\S]*?<\/h[34]>\s*(?:<!--\s*\/wp:heading\s*-->\s*)?)/gi;
-                    var questions = [];
-                    while ((match = questionPattern.exec(section)) !== null) {
-                        questions.push({
-                            html: match[0],
-                            index: match.index,
-                            end: match.index + match[0].length,
-                            text: stripTags(match[0])
-                        });
-                    }
-
-                    var extractedItems = [];
-                    var removeRanges = [];
-                    if (questions.length) {
-                        removeRanges.push({ start: 0, end: questions[0].index });
-                    }
-                    questions.forEach(function (question, index) {
-                        var answerStart = question.end;
-                        var answerEnd = questions[index + 1] ? questions[index + 1].index : section.length;
-                        var answerSource = section.slice(answerStart, answerEnd);
-                        var answer = answerSource.trim();
-                        var firstAnswerBlock = answerSource.match(/(?:<!--\s*wp:(?:paragraph|list)(?:\s+\{[\s\S]*?\})?\s*-->\s*)?(?:<p\b[^>]*>[\s\S]*?<\/p>|<ul\b[^>]*>[\s\S]*?<\/ul>|<ol\b[^>]*>[\s\S]*?<\/ol>)(?:\s*<!--\s*\/wp:(?:paragraph|list)\s*-->)?/i);
-                        var removeEnd = answerStart;
-                        if (firstAnswerBlock) {
-                            answer = firstAnswerBlock[0].trim();
-                            removeEnd = answerStart + firstAnswerBlock.index + firstAnswerBlock[0].length;
-                        } else {
-                            removeEnd = answerEnd;
-                        }
-                        if (question.text && stripTags(answer)) {
-                            extractedItems.push({
-                                question: question.text,
-                                answer: answer
-                            });
-                            removeRanges.push({ start: question.index, end: removeEnd });
-                        }
-                    });
-
-                    if (!extractedItems.length) {
-                        return { content: content, items: [], title: '' };
-                    }
-
-                    var cleanedSection = '';
-                    var cursor = 0;
-                    removeRanges.sort(function (a, b) {
-                        return a.start - b.start;
-                    }).forEach(function (range) {
-                        cleanedSection += section.slice(cursor, range.start);
-                        cursor = Math.max(cursor, range.end);
-                    });
-                    cleanedSection += section.slice(cursor);
-
-                    return {
-                        content: (content.slice(0, start) + cleanedSection + content.slice(end)).trim(),
-                        items: extractedItems,
-                        title: title
-                    };
-                }
-
-                items.querySelectorAll('input[name*="[question]"]').forEach(function (input) {
-                    input.setAttribute('data-faq-field', 'question');
-                });
-                items.querySelectorAll('textarea[name*="[answer]"]').forEach(function (textarea) {
-                    textarea.setAttribute('data-faq-field', 'answer');
-                });
-
-                addButton.addEventListener('click', function () {
-                    createItem('', '');
-                });
-                items.addEventListener('click', function (event) {
-                    if (!event.target.classList.contains('ai-craft-post-remove-faq-item')) {
-                        return;
-                    }
-
-                    event.target.closest('.ai-craft-post-faq-schema-item').remove();
-                    renumberItems();
-                });
-                moveButton.addEventListener('click', function () {
-                    var result = extractFaqFromContent(getEditorContent());
-                    if (!result.items.length) {
-                        status.textContent = '<?php echo esc_js(__('FAQ block was not found in content.', 'ai-craft-post')); ?>';
-                        return;
-                    }
-
-                    result.items.forEach(function (item) {
-                        createItem(item.question, item.answer);
-                    });
-                    if (result.title && titleInput) {
-                        titleInput.value = result.title;
-                    }
-                    setEditorContent(result.content);
-                    status.textContent = result.items.length + ' <?php echo esc_js(__('question(s) moved. Save or update the post to keep changes.', 'ai-craft-post')); ?>';
-                });
-            }());
-        </script>
         <?php
     }
 
@@ -659,9 +515,11 @@ class AI_Craft_Post_Plugin
         }
 
         $faq_css = (string) get_option(AI_CRAFT_POST_FAQ_CSS_OPTION, AI_CRAFT_POST_DEFAULT_FAQ_CSS);
-        $styles = '<style>' . wp_strip_all_tags($faq_css) . '</style>';
+        if ($faq_css !== '' && !wp_style_is('craftpost-faq-style', 'enqueued')) {
+            wp_enqueue_style('craftpost-faq-style');
+        }
 
-        return $content . $styles . '<section class="ai-craft-post-faq" aria-label="' . esc_attr($title) . '"><h2>' . esc_html($title) . '</h2>' . $output . '</section>';
+        return $content . '<section class="ai-craft-post-faq" aria-label="' . esc_attr($title) . '"><h2>' . esc_html($title) . '</h2>' . $output . '</section>';
     }
 
     /**
@@ -840,7 +698,7 @@ class AI_Craft_Post_Plugin
         }
         ?>
         <div class="wrap">
-            <h1><?php echo esc_html__('AI Craft Post Settings', 'ai-craft-post'); ?> v<?php echo esc_html(AI_CRAFT_POST_VERSION); ?></h1>
+            <h1><?php echo esc_html__('CraftPost Site Connector Settings', 'ai-craft-post'); ?> v<?php echo esc_html(AI_CRAFT_POST_VERSION); ?></h1>
 
             <p>
                 <?php echo esc_html__('Add this WordPress site to your CraftPost account, copy the generated aic_live key, and paste it below', 'ai-craft-post'); ?>
@@ -888,7 +746,7 @@ class AI_Craft_Post_Plugin
                                     <code><?php echo esc_html($seo_provider); ?></code>
                                 </p>
                                 <p class="description">
-                                    <?php echo esc_html__('AI Craft Post detects Yoast SEO, Rank Math, or All in One SEO.', 'ai-craft-post'); ?>
+                                    <?php echo esc_html__('CraftPost Site Connector detects Yoast SEO, Rank Math, or All in One SEO.', 'ai-craft-post'); ?>
                                 </p>
                             </td>
                         </tr>

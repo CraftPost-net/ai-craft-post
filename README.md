@@ -1,8 +1,8 @@
-# AI Craft Post
+# CraftPost Site Connector
 
 ## English
 
-AI Craft Post is a WordPress connector for the <a href="https://craftpost.net/" target="_blank" rel="noopener noreferrer">CraftPost</a> content automation service. It receives authenticated REST API webhooks and can create or update content, import images, write supported SEO metadata, manage FAQ content, and connect Polylang translations.
+CraftPost Site Connector is a WordPress connector for the <a href="https://craftpost.net/" target="_blank" rel="noopener noreferrer">CraftPost</a> content automation service. It receives authenticated REST API webhooks and can create or update content, import images, write supported SEO metadata, manage FAQ content, and connect Polylang translations.
 
 ### Features
 
@@ -25,8 +25,8 @@ AI Craft Post is a WordPress connector for the <a href="https://craftpost.net/" 
 
 1. Download a release ZIP.
 2. In WordPress, open **Plugins > Add New > Upload Plugin**.
-3. Upload and activate AI Craft Post.
-4. Open **Tools > AI Craft Post**.
+3. Upload and activate CraftPost Site Connector.
+4. Open **Tools > CraftPost Site Connector**.
 5. Add the WordPress site in CraftPost and paste the generated `aic_live` site key into the plugin settings.
 6. Choose the optional SEO and FAQ settings required for the website.
 
@@ -45,9 +45,9 @@ CraftPost may send generated or updated content, metadata, translations, FAQ ite
 
 <a href="https://kinescope.io/embed/9z1h5x44N1cnxRaYmfW7rR" target="_blank" rel="noopener noreferrer">Watch the CraftPost setup and usage guide</a>.
 
-## Українська
+### Українська
 
-AI Craft Post — це конектор WordPress для сервісу автоматизації контенту <a href="https://craftpost.net/" target="_blank" rel="noopener noreferrer">CraftPost</a>. Плагін приймає автентифіковані REST API вебхуки, створює та оновлює контент, імпортує зображення, записує підтримувані SEO-метадані, керує FAQ і зв’язує переклади Polylang.
+CraftPost Site Connector — це конектор WordPress для сервісу автоматизації контенту <a href="https://craftpost.net/" target="_blank" rel="noopener noreferrer">CraftPost</a>. Плагін приймає автентифіковані REST API вебхуки, створює та оновлює контент, імпортує зображення, записує підтримувані SEO-метадані, керує FAQ і зв'язує переклади Polylang.
 
 ### Можливості
 
@@ -56,7 +56,7 @@ AI Craft Post — це конектор WordPress для сервісу авто
 - Імпортує головні й секційні зображення до медіабібліотеки WordPress.
 - Зберігає нативні блоки Gutenberg для зображень, галерей, медіа з текстом та обкладинок під час оновлення статей.
 - Підтримує метадані Yoast SEO, Rank Math та All in One SEO.
-- Зберігає й показує FAQ з необов’язковими структурованими даними FAQPage.
+- Зберігає й показує FAQ з необов'язковими структурованими даними FAQPage.
 - Підтримує багатомовний контент через Polylang.
 - Автентифікує та підписує вхідні запити й захищає їх від повторного відтворення.
 
@@ -70,8 +70,8 @@ AI Craft Post — це конектор WordPress для сервісу авто
 
 1. Завантажте ZIP-архів релізу.
 2. У WordPress відкрийте **Плагіни > Додати новий > Завантажити плагін**.
-3. Завантажте та активуйте AI Craft Post.
-4. Відкрийте **Інструменти > AI Craft Post**.
+3. Завантажте та активуйте CraftPost Site Connector.
+4. Відкрийте **Інструменти > CraftPost Site Connector**.
 5. Додайте WordPress-сайт у CraftPost і вставте створений ключ `aic_live` у налаштування плагіна.
 6. Виберіть потрібні додаткові налаштування SEO та FAQ.
 
@@ -98,4 +98,4 @@ Run the official Plugin Check before creating a release. Release ZIP files must 
 
 ## License
 
-AI Craft Post is licensed under GPLv2 or later.
+CraftPost Site Connector is licensed under GPLv2 or later.

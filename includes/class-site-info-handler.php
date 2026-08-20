@@ -59,7 +59,7 @@ class AI_Craft_Post_Site_Info_Handler
                 'write_keyword' => (bool) get_option(AI_CRAFT_POST_SEO_WRITE_KEYWORD_OPTION, true),
             ),
             'plugin' => array(
-                'name' => 'AI Craft Post',
+                'name' => 'CraftPost Site Connector',
                 'version' => defined('AI_CRAFT_POST_VERSION') ? AI_CRAFT_POST_VERSION : '',
                 'capabilities' => array(
                     'article_payload_language' => true,

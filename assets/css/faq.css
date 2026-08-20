@@ -1,0 +1,78 @@
+.ai-craft-post-faq h2 {
+    margin: 0 0 18px;
+    line-height: 1.25;
+    color: inherit;
+}
+.ai-craft-post-faq-item {
+    margin: 0;
+    padding: 18px 0;
+    border-top: 1px solid rgba(0, 0, 0, .1);
+}
+.ai-craft-post-faq-item:first-of-type {
+    border-top: 0;
+    padding-top: 0;
+}
+.ai-craft-post-faq-item:last-child {
+    padding-bottom: 0;
+}
+.ai-craft-post-faq-question {
+    margin: 0;
+    line-height: 1.45;
+    font-weight: 700;
+    color: inherit;
+}
+.ai-craft-post-faq-answer {
+    margin-top: 10px;
+    line-height: 1.7;
+    color: inherit;
+    opacity: .88;
+}
+.ai-craft-post-faq-answer > *:first-child {
+    margin-top: 0;
+}
+.ai-craft-post-faq-answer > *:last-child {
+    margin-bottom: 0;
+}
+.ai-craft-post-faq summary.ai-craft-post-faq-question {
+    cursor: pointer;
+    list-style: none;
+    position: relative;
+    padding-right: 32px;
+}
+.ai-craft-post-faq summary.ai-craft-post-faq-question::-webkit-details-marker {
+    display: none;
+}
+.ai-craft-post-faq summary.ai-craft-post-faq-question:after {
+    content: "+";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 24px;
+    height: 24px;
+    margin-top: -12px;
+    border: 1px solid rgba(0, 0, 0, .18);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1;
+    opacity: .72;
+}
+.ai-craft-post-faq details[open] > summary.ai-craft-post-faq-question:after {
+    content: "-";
+    line-height: 2;
+}
+@media (max-width: 600px) {
+    .ai-craft-post-faq {
+        padding: 18px 16px;
+        border-radius: 12px;
+    }
+    .ai-craft-post-faq-item {
+        padding: 15px 0;
+    }
+    .ai-craft-post-faq summary.ai-craft-post-faq-question {
+        padding-right: 30px;
+    }
+}
