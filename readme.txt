@@ -103,6 +103,7 @@ Yes. Deactivate the plugin to disable its REST routes. You can also replace the 
 * Preserved existing settings, metadata keys, and REST API compatibility.
 * Added a migration guard that automatically deactivates the legacy plugin directory and prevents a fatal error.
 * Updated global function prefixes to prevent collisions while activating alongside the legacy version.
+* Detects version-suffixed legacy plugin directories created by GitHub source archives.
 
 = 1.4.0 =
 

@@ -23,7 +23,8 @@ if (class_exists('AI_Craft_Post_Plugin', false)) {
         require_once ABSPATH . 'wp-admin/includes/plugin.php';
     }
 
-    $legacy_plugin = 'ai-craft-post/ai-craft-post.php';
+    $legacy_class = new ReflectionClass('AI_Craft_Post_Plugin');
+    $legacy_plugin = plugin_basename($legacy_class->getFileName());
     $network_wide = is_multisite() && is_plugin_active_for_network($legacy_plugin);
     deactivate_plugins($legacy_plugin, false, $network_wide);
     set_transient('craftpost_site_connector_legacy_deactivated', true, MINUTE_IN_SECONDS);
