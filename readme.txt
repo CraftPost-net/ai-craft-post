@@ -106,6 +106,7 @@ Yes. Deactivate the plugin to disable its REST routes. You can also replace the 
 * Detects version-suffixed legacy plugin directories created by GitHub source archives.
 * Preserved the ai-craft-post REST namespace in the Clearfy whitelist after the slug migration.
 * Prevented the migration guard from treating the current plugin file as a legacy copy.
+* Updated all settings-page links to the craftpost-site-connector admin slug.
 
 = 1.4.0 =
 

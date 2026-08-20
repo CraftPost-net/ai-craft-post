@@ -190,7 +190,7 @@ class AI_Craft_Post_Plugin
      */
     public function add_plugin_action_links($links)
     {
-        $settings_link = '<a href="' . esc_url(admin_url('tools.php?page=ai-craft-post')) . '" target="_blank" rel="noopener noreferrer">' . esc_html__('Settings', 'craftpost-site-connector') . '</a>';
+        $settings_link = '<a href="' . esc_url(admin_url('tools.php?page=craftpost-site-connector')) . '">' . esc_html__('Settings', 'craftpost-site-connector') . '</a>';
         $key_link = '<a href="' . esc_url(AI_CRAFT_POST_DASHBOARD_URL) . '" target="_blank" rel="noopener noreferrer">' . esc_html__('Get key', 'craftpost-site-connector') . '</a>';
 
         array_unshift($links, $settings_link, $key_link);
@@ -329,7 +329,7 @@ class AI_Craft_Post_Plugin
             <p class="description">
                 <?php echo esc_html__('Questions shown after the post content.', 'craftpost-site-connector'); ?>
                 <?php echo esc_html__('The FAQPage schema enabled in', 'craftpost-site-connector'); ?>
-                <a href="<?php echo esc_url(admin_url('tools.php?page=ai-craft-post')); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html__('CraftPost Site Connector settings', 'craftpost-site-connector'); ?></a>.
+                <a href="<?php echo esc_url(admin_url('tools.php?page=craftpost-site-connector')); ?>"><?php echo esc_html__('CraftPost Site Connector settings', 'craftpost-site-connector'); ?></a>.
             </p>
             <p>
                 <label>
