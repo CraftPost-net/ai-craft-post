@@ -19,16 +19,18 @@ if (!defined('ABSPATH')) {
 
 // Prevent conflicts when the legacy plugin directory is still active.
 if (class_exists('AI_Craft_Post_Plugin', false)) {
-    if (!function_exists('deactivate_plugins')) {
-        require_once ABSPATH . 'wp-admin/includes/plugin.php';
-    }
-
     $legacy_class = new ReflectionClass('AI_Craft_Post_Plugin');
-    $legacy_plugin = plugin_basename($legacy_class->getFileName());
-    $network_wide = is_multisite() && is_plugin_active_for_network($legacy_plugin);
-    deactivate_plugins($legacy_plugin, false, $network_wide);
-    set_transient('craftpost_site_connector_legacy_deactivated', true, MINUTE_IN_SECONDS);
-    return;
+    if (realpath($legacy_class->getFileName()) !== realpath(__FILE__)) {
+        if (!function_exists('deactivate_plugins')) {
+            require_once ABSPATH . 'wp-admin/includes/plugin.php';
+        }
+
+        $legacy_plugin = plugin_basename($legacy_class->getFileName());
+        $network_wide = is_multisite() && is_plugin_active_for_network($legacy_plugin);
+        deactivate_plugins($legacy_plugin, false, $network_wide);
+        set_transient('craftpost_site_connector_legacy_deactivated', true, MINUTE_IN_SECONDS);
+        return;
+    }
 }
 
 // Confirm that the legacy plugin was automatically deactivated during migration.
@@ -1056,8 +1058,9 @@ add_filter('clearfy_rest_api_white_list', function ($white_list) {
         $white_list = array();
     }
 
-    $white_list[] = 'craftpost-site-connector';
+    $white_list[] = 'ai-craft-post';
     $white_list[] = 'ai-craft-post/v1';
+    $white_list[] = 'craftpost-site-connector';
 
     return array_values(array_unique($white_list));
 });
