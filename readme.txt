@@ -101,7 +101,7 @@ Yes. Deactivate the plugin to disable its REST routes. You can also replace the 
 
 * Changed the plugin slug and text domain to craftpost-site-connector for the WordPress.org submission.
 * Preserved existing settings, metadata keys, and REST API compatibility.
-* Added a migration guard that prevents a fatal error when the legacy plugin directory is still active.
+* Added a migration guard that automatically deactivates the legacy plugin directory and prevents a fatal error.
 
 = 1.4.0 =
 

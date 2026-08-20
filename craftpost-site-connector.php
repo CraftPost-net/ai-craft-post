@@ -19,14 +19,26 @@ if (!defined('ABSPATH')) {
 
 // Prevent conflicts when the legacy plugin directory is still active.
 if (class_exists('AI_Craft_Post_Plugin', false)) {
-    add_action('admin_init', function () {
-        deactivate_plugins(plugin_basename(__FILE__));
-    });
-    add_action('admin_notices', function () {
-        echo '<div class="notice notice-error"><p>' . esc_html__('CraftPost Site Connector could not be activated because the previous AI Craft Post version is still active. Deactivate and delete the previous version, then activate CraftPost Site Connector again. Existing settings and content will be preserved.', 'craftpost-site-connector') . '</p></div>';
-    });
+    if (!function_exists('deactivate_plugins')) {
+        require_once ABSPATH . 'wp-admin/includes/plugin.php';
+    }
+
+    $legacy_plugin = 'ai-craft-post/ai-craft-post.php';
+    $network_wide = is_multisite() && is_plugin_active_for_network($legacy_plugin);
+    deactivate_plugins($legacy_plugin, false, $network_wide);
+    set_transient('craftpost_site_connector_legacy_deactivated', true, MINUTE_IN_SECONDS);
     return;
 }
+
+// Confirm that the legacy plugin was automatically deactivated during migration.
+add_action('admin_notices', function () {
+    if (!get_transient('craftpost_site_connector_legacy_deactivated')) {
+        return;
+    }
+
+    delete_transient('craftpost_site_connector_legacy_deactivated');
+    echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__('CraftPost Site Connector was activated and the previous AI Craft Post version was automatically deactivated. Existing settings and content were preserved. You can now delete the previous plugin.', 'craftpost-site-connector') . '</p></div>';
+});
 
 define('AI_CRAFT_POST_VERSION', '1.4.1');
 define('AI_CRAFT_POST_PLUGIN_URL', plugin_dir_url(__FILE__));
