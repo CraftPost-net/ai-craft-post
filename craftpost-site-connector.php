@@ -17,6 +17,17 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+// Prevent conflicts when the legacy plugin directory is still active.
+if (class_exists('AI_Craft_Post_Plugin', false)) {
+    add_action('admin_init', function () {
+        deactivate_plugins(plugin_basename(__FILE__));
+    });
+    add_action('admin_notices', function () {
+        echo '<div class="notice notice-error"><p>' . esc_html__('CraftPost Site Connector could not be activated because the previous AI Craft Post version is still active. Deactivate and delete the previous version, then activate CraftPost Site Connector again. Existing settings and content will be preserved.', 'craftpost-site-connector') . '</p></div>';
+    });
+    return;
+}
+
 define('AI_CRAFT_POST_VERSION', '1.4.1');
 define('AI_CRAFT_POST_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('AI_CRAFT_POST_PLUGIN_PATH', plugin_dir_path(__FILE__));
