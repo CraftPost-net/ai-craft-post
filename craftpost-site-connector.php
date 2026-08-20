@@ -3,21 +3,21 @@
  * Plugin Name: CraftPost Site Connector
  * Plugin URI: https://craftpost.net/
  * Description: Secure receiver and connector plugin for CraftPost content automation service.
- * Version: 1.4.0
+ * Version: 1.4.1
  * Requires at least: 6.2
  * Requires PHP: 7.4
  * Author: CraftPost
  * Author URI: https://craftpost.net
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: ai-craft-post
+ * Text Domain: craftpost-site-connector
  */
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-define('AI_CRAFT_POST_VERSION', '1.4.0');
+define('AI_CRAFT_POST_VERSION', '1.4.1');
 define('AI_CRAFT_POST_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('AI_CRAFT_POST_PLUGIN_PATH', plugin_dir_path(__FILE__));
 define('AI_CRAFT_POST_SITE_KEY_OPTION', 'ai_craft_post_site_key');
@@ -50,7 +50,7 @@ CSS
 );
 
 /**
- * Main AI Craft Post plugin class.
+ * Main CraftPost Site Connector plugin class.
  */
 class AI_Craft_Post_Plugin
 {
@@ -114,11 +114,11 @@ class AI_Craft_Post_Plugin
         );
 
         wp_localize_script('craftpost-admin-faq-metabox', 'craftpostFaqI18n', array(
-            'question'    => __('Question', 'ai-craft-post'),
-            'answer'      => __('Answer', 'ai-craft-post'),
-            'remove'      => __('Remove', 'ai-craft-post'),
-            'notFound'    => __('FAQ block was not found in content.', 'ai-craft-post'),
-            'movedSuffix' => __('question(s) moved. Save or update the post to keep changes.', 'ai-craft-post'),
+            'question'    => __('Question', 'craftpost-site-connector'),
+            'answer'      => __('Answer', 'craftpost-site-connector'),
+            'remove'      => __('Remove', 'craftpost-site-connector'),
+            'notFound'    => __('FAQ block was not found in content.', 'craftpost-site-connector'),
+            'movedSuffix' => __('question(s) moved. Save or update the post to keep changes.', 'craftpost-site-connector'),
         ));
     }
 
@@ -151,10 +151,10 @@ class AI_Craft_Post_Plugin
     {
         add_submenu_page(
             'tools.php',
-            __('CraftPost Site Connector', 'ai-craft-post'),
-            __('CraftPost Site Connector', 'ai-craft-post'),
+            __('CraftPost Site Connector', 'craftpost-site-connector'),
+            __('CraftPost Site Connector', 'craftpost-site-connector'),
             'manage_options',
-            'ai-craft-post',
+            'craftpost-site-connector',
             array($this, 'render_admin_page')
         );
     }
@@ -164,8 +164,8 @@ class AI_Craft_Post_Plugin
      */
     public function add_plugin_action_links($links)
     {
-        $settings_link = '<a href="' . esc_url(admin_url('tools.php?page=ai-craft-post')) . '" target="_blank" rel="noopener noreferrer">' . esc_html__('Settings', 'ai-craft-post') . '</a>';
-        $key_link = '<a href="' . esc_url(AI_CRAFT_POST_DASHBOARD_URL) . '" target="_blank" rel="noopener noreferrer">' . esc_html__('Get key', 'ai-craft-post') . '</a>';
+        $settings_link = '<a href="' . esc_url(admin_url('tools.php?page=ai-craft-post')) . '" target="_blank" rel="noopener noreferrer">' . esc_html__('Settings', 'craftpost-site-connector') . '</a>';
+        $key_link = '<a href="' . esc_url(AI_CRAFT_POST_DASHBOARD_URL) . '" target="_blank" rel="noopener noreferrer">' . esc_html__('Get key', 'craftpost-site-connector') . '</a>';
 
         array_unshift($links, $settings_link, $key_link);
 
@@ -228,10 +228,10 @@ class AI_Craft_Post_Plugin
             return;
         }
 
-        $policy_text = '<p class="privacy-policy-tutorial">' . wp_kses_post(__('CraftPost Site Connector connects this website to the external CraftPost service after an administrator configures a site key. CraftPost may retrieve site configuration, WordPress user account identifiers and roles, post metadata, post content, taxonomy data, media settings, and supported plugin information to create, update, translate, or refresh website content. CraftPost may send generated content and remote image URLs back to this website. Downloading a remote image also sends a request from the website server to the host of that image. The site key is stored in the WordPress options table. Review the <a href="https://craftpost.net/privacy.html" target="_blank" rel="noopener noreferrer">CraftPost Privacy Policy</a> and <a href="https://craftpost.net/terms.html" target="_blank" rel="noopener noreferrer">Terms of Service</a> for details about processing and retention.', 'ai-craft-post')) . '</p>';
+        $policy_text = '<p class="privacy-policy-tutorial">' . wp_kses_post(__('CraftPost Site Connector connects this website to the external CraftPost service after an administrator configures a site key. CraftPost may retrieve site configuration, WordPress user account identifiers and roles, post metadata, post content, taxonomy data, media settings, and supported plugin information to create, update, translate, or refresh website content. CraftPost may send generated content and remote image URLs back to this website. Downloading a remote image also sends a request from the website server to the host of that image. The site key is stored in the WordPress options table. Review the <a href="https://craftpost.net/privacy.html" target="_blank" rel="noopener noreferrer">CraftPost Privacy Policy</a> and <a href="https://craftpost.net/terms.html" target="_blank" rel="noopener noreferrer">Terms of Service</a> for details about processing and retention.', 'craftpost-site-connector')) . '</p>';
 
         wp_add_privacy_policy_content(
-            __('CraftPost Site Connector', 'ai-craft-post'),
+            __('CraftPost Site Connector', 'craftpost-site-connector'),
             wp_kses_post(wpautop($policy_text, false))
         );
     }
@@ -274,7 +274,7 @@ class AI_Craft_Post_Plugin
 
             add_meta_box(
                 'ai-craft-post-faq-schema',
-                __('FAQ schema.org', 'ai-craft-post'),
+                __('FAQ schema.org', 'craftpost-site-connector'),
                 array($this, 'render_faq_schema_meta_box'),
                 $post_type,
                 'normal',
@@ -294,20 +294,20 @@ class AI_Craft_Post_Plugin
         }
         $title = (string) get_post_meta($post->ID, AI_CRAFT_POST_FAQ_SCHEMA_TITLE_META_KEY, true);
         if ($title === '') {
-            $title = __('FAQ', 'ai-craft-post');
+            $title = __('FAQ', 'craftpost-site-connector');
         }
 
         wp_nonce_field('ai_craft_post_save_faq_schema', 'ai_craft_post_faq_schema_nonce');
         ?>
         <div id="ai-craft-post-faq-schema-box">
             <p class="description">
-                <?php echo esc_html__('Questions shown after the post content.', 'ai-craft-post'); ?>
-                <?php echo esc_html__('The FAQPage schema enabled in', 'ai-craft-post'); ?>
-                <a href="<?php echo esc_url(admin_url('tools.php?page=ai-craft-post')); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html__('CraftPost Site Connector settings', 'ai-craft-post'); ?></a>.
+                <?php echo esc_html__('Questions shown after the post content.', 'craftpost-site-connector'); ?>
+                <?php echo esc_html__('The FAQPage schema enabled in', 'craftpost-site-connector'); ?>
+                <a href="<?php echo esc_url(admin_url('tools.php?page=ai-craft-post')); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html__('CraftPost Site Connector settings', 'craftpost-site-connector'); ?></a>.
             </p>
             <p>
                 <label>
-                    <strong><?php echo esc_html__('FAQ heading', 'ai-craft-post'); ?></strong>
+                    <strong><?php echo esc_html__('FAQ heading', 'craftpost-site-connector'); ?></strong>
                     <input type="text" id="ai-craft-post-faq-title" name="ai_craft_post_faq_schema_title" value="<?php echo esc_attr($title); ?>" class="widefat" />
                 </label>
             </p>
@@ -320,22 +320,22 @@ class AI_Craft_Post_Plugin
                     <div class="ai-craft-post-faq-schema-item" style="margin: 0 0 14px; padding: 12px; border: 1px solid #dcdcde; background: #fff;">
                         <p style="margin-top: 0;">
                             <label>
-                                <strong><?php echo esc_html__('Question', 'ai-craft-post'); ?></strong>
+                                <strong><?php echo esc_html__('Question', 'craftpost-site-connector'); ?></strong>
                                 <input type="text" name="ai_craft_post_faq_schema[<?php echo esc_attr($index); ?>][question]" value="<?php echo esc_attr($question); ?>" class="widefat" />
                             </label>
                         </p>
                         <p>
                             <label>
-                                <strong><?php echo esc_html__('Answer', 'ai-craft-post'); ?></strong>
+                                <strong><?php echo esc_html__('Answer', 'craftpost-site-connector'); ?></strong>
                                 <textarea name="ai_craft_post_faq_schema[<?php echo esc_attr($index); ?>][answer]" rows="4" class="widefat"><?php echo esc_textarea($answer); ?></textarea>
                             </label>
                         </p>
-                        <button type="button" class="button ai-craft-post-remove-faq-item"><?php echo esc_html__('Remove', 'ai-craft-post'); ?></button>
+                        <button type="button" class="button ai-craft-post-remove-faq-item"><?php echo esc_html__('Remove', 'craftpost-site-connector'); ?></button>
                     </div>
                 <?php endforeach; ?>
             </div>
-            <button type="button" class="button" id="ai-craft-post-add-faq-item"><?php echo esc_html__('Add question', 'ai-craft-post'); ?></button>
-            <button type="button" class="button" id="ai-craft-post-move-faq-from-content"><?php echo esc_html__('Move FAQ from content', 'ai-craft-post'); ?></button>
+            <button type="button" class="button" id="ai-craft-post-add-faq-item"><?php echo esc_html__('Add question', 'craftpost-site-connector'); ?></button>
+            <button type="button" class="button" id="ai-craft-post-move-faq-from-content"><?php echo esc_html__('Move FAQ from content', 'craftpost-site-connector'); ?></button>
             <span id="ai-craft-post-faq-status" style="margin-left: 8px;"></span>
         </div>
         <?php
@@ -389,7 +389,7 @@ class AI_Craft_Post_Plugin
         }
 
         if ($title === '') {
-            $title = __('FAQ', 'ai-craft-post');
+            $title = __('FAQ', 'craftpost-site-connector');
         }
 
         update_post_meta($post_id, AI_CRAFT_POST_FAQ_SCHEMA_META_KEY, $items);
@@ -511,7 +511,7 @@ class AI_Craft_Post_Plugin
 
         $title = (string) get_post_meta($post_id, AI_CRAFT_POST_FAQ_SCHEMA_TITLE_META_KEY, true);
         if ($title === '') {
-            $title = __('FAQ', 'ai-craft-post');
+            $title = __('FAQ', 'craftpost-site-connector');
         }
 
         $faq_css = (string) get_option(AI_CRAFT_POST_FAQ_CSS_OPTION, AI_CRAFT_POST_DEFAULT_FAQ_CSS);
@@ -523,7 +523,7 @@ class AI_Craft_Post_Plugin
     }
 
     /**
-     * Register AI Craft Post REST routes.
+     * Register CraftPost Site Connector REST routes.
      */
     public function register_rest_routes()
     {
@@ -565,7 +565,7 @@ class AI_Craft_Post_Plugin
     }
 
     /**
-     * Verify webhook requests from AI Craft Post.
+     * Verify webhook requests from CraftPost Site Connector.
      */
     public function verify_signed_request($request)
     {
@@ -679,7 +679,7 @@ class AI_Craft_Post_Plugin
             'yoast' => 'Yoast SEO',
             'rank_math' => 'Rank Math',
             'aioseo' => 'All in One SEO',
-            'none' => __('No supported SEO plugin detected', 'ai-craft-post'),
+            'none' => __('No supported SEO plugin detected', 'craftpost-site-connector'),
         );
         $seo_provider_label = $seo_provider_labels[$seo_provider] ?? $seo_provider;
         $write_title = (bool) get_option(AI_CRAFT_POST_SEO_WRITE_TITLE_OPTION, true);
@@ -698,11 +698,11 @@ class AI_Craft_Post_Plugin
         }
         ?>
         <div class="wrap">
-            <h1><?php echo esc_html__('CraftPost Site Connector Settings', 'ai-craft-post'); ?> v<?php echo esc_html(AI_CRAFT_POST_VERSION); ?></h1>
+            <h1><?php echo esc_html__('CraftPost Site Connector Settings', 'craftpost-site-connector'); ?> v<?php echo esc_html(AI_CRAFT_POST_VERSION); ?></h1>
 
             <p>
-                <?php echo esc_html__('Add this WordPress site to your CraftPost account, copy the generated aic_live key, and paste it below', 'ai-craft-post'); ?>
-                <a href="<?php echo esc_url(AI_CRAFT_POST_DASHBOARD_URL); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html__('Open CraftPost and get a key', 'ai-craft-post'); ?></a>
+                <?php echo esc_html__('Add this WordPress site to your CraftPost account, copy the generated aic_live key, and paste it below', 'craftpost-site-connector'); ?>
+                <a href="<?php echo esc_url(AI_CRAFT_POST_DASHBOARD_URL); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html__('Open CraftPost and get a key', 'craftpost-site-connector'); ?></a>
             </p>
 
             <form method="post" action="options.php">
@@ -711,7 +711,7 @@ class AI_Craft_Post_Plugin
                 <table class="form-table" role="presentation">
                     <tr>
                         <th scope="row">
-                            <label for="<?php echo esc_attr(AI_CRAFT_POST_SITE_KEY_OPTION); ?>"><?php echo esc_html__('Site Key', 'ai-craft-post'); ?></label>
+                            <label for="<?php echo esc_attr(AI_CRAFT_POST_SITE_KEY_OPTION); ?>"><?php echo esc_html__('Site Key', 'craftpost-site-connector'); ?></label>
                         </th>
                         <td>
                             <input type="text"
@@ -720,14 +720,14 @@ class AI_Craft_Post_Plugin
                                 value="<?php echo esc_attr($site_key); ?>"
                                 class="regular-text"
                                 autocomplete="new-password" />
-                            <p class="description"><?php echo esc_html__('Paste a new key to replace the stored key.', 'ai-craft-post'); ?></p>
+                            <p class="description"><?php echo esc_html__('Paste a new key to replace the stored key.', 'craftpost-site-connector'); ?></p>
                             <p>
-                                <strong><?php echo esc_html__('Status:', 'ai-craft-post'); ?></strong>
-                                <?php echo $site_key === '' ? esc_html__('missing', 'ai-craft-post') : '<span style="color: green;">' . esc_html__('Active', 'ai-craft-post') . '</span>'; ?>
+                                <strong><?php echo esc_html__('Status:', 'craftpost-site-connector'); ?></strong>
+                                <?php echo $site_key === '' ? esc_html__('missing', 'craftpost-site-connector') : '<span style="color: green;">' . esc_html__('Active', 'craftpost-site-connector') . '</span>'; ?>
                             </p>
                             <?php if ($masked_key !== '') : ?>
                                 <p>
-                                    <strong><?php echo esc_html__('Stored key:', 'ai-craft-post'); ?></strong>
+                                    <strong><?php echo esc_html__('Stored key:', 'craftpost-site-connector'); ?></strong>
                                     <code><?php echo esc_html($masked_key); ?></code>
                                 </p>
                             <?php endif; ?>
@@ -735,23 +735,23 @@ class AI_Craft_Post_Plugin
                     </tr>
                 </table>
 
-                <h2><?php echo esc_html__('SEO settings', 'ai-craft-post'); ?></h2>
+                <h2><?php echo esc_html__('SEO settings', 'craftpost-site-connector'); ?></h2>
                 <div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; max-width: 980px;">
                     <table class="form-table" role="presentation" style="max-width: 620px;">
                         <tr>
-                            <th scope="row"><?php echo esc_html__('Detected SEO plugin', 'ai-craft-post'); ?></th>
+                            <th scope="row"><?php echo esc_html__('Detected SEO plugin', 'craftpost-site-connector'); ?></th>
                             <td>
                                 <p style="margin-top: 0;">
                                     <strong><?php echo esc_html($seo_provider_label); ?></strong>
                                     <code><?php echo esc_html($seo_provider); ?></code>
                                 </p>
                                 <p class="description">
-                                    <?php echo esc_html__('CraftPost Site Connector detects Yoast SEO, Rank Math, or All in One SEO.', 'ai-craft-post'); ?>
+                                    <?php echo esc_html__('CraftPost Site Connector detects Yoast SEO, Rank Math, or All in One SEO.', 'craftpost-site-connector'); ?>
                                 </p>
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row"><?php echo esc_html__('Write SEO fields', 'ai-craft-post'); ?></th>
+                            <th scope="row"><?php echo esc_html__('Write SEO fields', 'craftpost-site-connector'); ?></th>
                             <td>
                                 <fieldset>
                                     <input type="hidden" name="<?php echo esc_attr(AI_CRAFT_POST_SEO_WRITE_TITLE_OPTION); ?>" value="0" />
@@ -760,7 +760,7 @@ class AI_Craft_Post_Plugin
                                             name="<?php echo esc_attr(AI_CRAFT_POST_SEO_WRITE_TITLE_OPTION); ?>"
                                             value="1"
                                             <?php checked($write_title); ?> />
-                                        <?php echo esc_html__('Unique SEO Title + Site Name', 'ai-craft-post'); ?>
+                                        <?php echo esc_html__('Unique SEO Title + Site Name', 'craftpost-site-connector'); ?>
                                     </label>
                                     <br />
                                     <input type="hidden" name="<?php echo esc_attr(AI_CRAFT_POST_SEO_WRITE_DESCRIPTION_OPTION); ?>" value="0" />
@@ -769,7 +769,7 @@ class AI_Craft_Post_Plugin
                                             name="<?php echo esc_attr(AI_CRAFT_POST_SEO_WRITE_DESCRIPTION_OPTION); ?>"
                                             value="1"
                                             <?php checked($write_description); ?> />
-                                        <?php echo esc_html__('Meta Description', 'ai-craft-post'); ?>
+                                        <?php echo esc_html__('Meta Description', 'craftpost-site-connector'); ?>
                                     </label>
                                     <br />
                                     <input type="hidden" name="<?php echo esc_attr(AI_CRAFT_POST_SEO_WRITE_KEYWORD_OPTION); ?>" value="0" />
@@ -778,11 +778,11 @@ class AI_Craft_Post_Plugin
                                             name="<?php echo esc_attr(AI_CRAFT_POST_SEO_WRITE_KEYWORD_OPTION); ?>"
                                             value="1"
                                             <?php checked($write_keyword); ?> />
-                                        <?php echo esc_html__('Focus Keyword', 'ai-craft-post'); ?>
+                                        <?php echo esc_html__('Focus Keyword', 'craftpost-site-connector'); ?>
                                     </label>
                                 </fieldset>
                                 <p class="description">
-                                    <?php echo esc_html__('Checked fields use generated values. Unchecked fields use the default SEO plugin templates (Title, Page, Separator, Site Name).', 'ai-craft-post'); ?>
+                                    <?php echo esc_html__('Checked fields use generated values. Unchecked fields use the default SEO plugin templates (Title, Page, Separator, Site Name).', 'craftpost-site-connector'); ?>
                                 </p>
                             </td>
                         </tr>
@@ -801,10 +801,10 @@ class AI_Craft_Post_Plugin
                     </div>
                 </div>
 
-                <h2><?php echo esc_html__('FAQ settings', 'ai-craft-post'); ?></h2>
+                <h2><?php echo esc_html__('FAQ settings', 'craftpost-site-connector'); ?></h2>
                 <table class="form-table" role="presentation">
                     <tr>
-                        <th scope="row"><?php echo esc_html__('FAQ schema', 'ai-craft-post'); ?></th>
+                        <th scope="row"><?php echo esc_html__('FAQ schema', 'craftpost-site-connector'); ?></th>
                         <td>
                             <input type="hidden" name="<?php echo esc_attr(AI_CRAFT_POST_FAQ_METABOX_ENABLED_OPTION); ?>" value="0" />
                             <label>
@@ -812,10 +812,10 @@ class AI_Craft_Post_Plugin
                                     name="<?php echo esc_attr(AI_CRAFT_POST_FAQ_METABOX_ENABLED_OPTION); ?>"
                                     value="1"
                                     <?php checked($faq_metabox_enabled); ?> />
-                                <?php echo esc_html__('Use FAQ metabox', 'ai-craft-post'); ?>
+                                <?php echo esc_html__('Use FAQ metabox', 'craftpost-site-connector'); ?>
                             </label>
                             <p class="description">
-                                <?php echo esc_html__('Stores generated questions in the FAQ metabox. When disabled, questions are added directly to the post content.', 'ai-craft-post'); ?>
+                                <?php echo esc_html__('Stores generated questions in the FAQ metabox. When disabled, questions are added directly to the post content.', 'craftpost-site-connector'); ?>
                             </p>
                             <br />
                             <input type="hidden" name="<?php echo esc_attr(AI_CRAFT_POST_FAQ_SCHEMA_ENABLED_OPTION); ?>" value="0" />
@@ -824,10 +824,10 @@ class AI_Craft_Post_Plugin
                                     name="<?php echo esc_attr(AI_CRAFT_POST_FAQ_SCHEMA_ENABLED_OPTION); ?>"
                                     value="1"
                                     <?php checked($faq_schema_enabled); ?> />
-                                <?php echo esc_html__('Enable FAQPage schema.org', 'ai-craft-post'); ?>
+                                <?php echo esc_html__('Enable FAQPage schema.org', 'craftpost-site-connector'); ?>
                             </label>
                             <p class="description">
-                                <?php echo esc_html__('Adds FAQPage structured data for search engines without changing the visible post content.', 'ai-craft-post'); ?>
+                                <?php echo esc_html__('Adds FAQPage structured data for search engines without changing the visible post content.', 'craftpost-site-connector'); ?>
                             </p>
                             <br />
                             <input type="hidden" name="<?php echo esc_attr(AI_CRAFT_POST_FAQ_DETAILS_ENABLED_OPTION); ?>" value="0" />
@@ -836,12 +836,12 @@ class AI_Craft_Post_Plugin
                                     name="<?php echo esc_attr(AI_CRAFT_POST_FAQ_DETAILS_ENABLED_OPTION); ?>"
                                     value="1"
                                     <?php checked($faq_details_enabled); ?> />
-                                <?php echo esc_html__('Display FAQ as collapsible details', 'ai-craft-post'); ?>
+                                <?php echo esc_html__('Display FAQ as collapsible details', 'craftpost-site-connector'); ?>
                             </label>
                             <p class="description">
-                                <?php echo esc_html__('Enable this to use details blocks where the first question is open and the rest are collapsed', 'ai-craft-post'); ?>
+                                <?php echo esc_html__('Enable this to use details blocks where the first question is open and the rest are collapsed', 'craftpost-site-connector'); ?>
                             </p>
-                            <div aria-label="<?php echo esc_attr__('FAQ metabox preview', 'ai-craft-post'); ?>" style="max-width: 450px; margin-top: 14px;">
+                            <div aria-label="<?php echo esc_attr__('FAQ metabox preview', 'craftpost-site-connector'); ?>" style="max-width: 450px; margin-top: 14px;">
                                 <svg viewBox="0 0 520 150" role="img" style="width: 100%; height: auto; display: block; border: 1px solid #ccd0d4; background: #f6f7f7;">
                                     <rect x="0" y="0" width="520" height="150" fill="#f6f7f7" />
                                     <rect x="14" y="16" width="492" height="118" fill="#fff" stroke="#c3c4c7" />
@@ -854,14 +854,14 @@ class AI_Craft_Post_Plugin
                                     <text x="166" y="114" fill="#135e96" font-family="Arial, sans-serif" font-size="13">Move FAQ from content</text>
                                 </svg>
                                 <p class="description" style="margin-top: 8px;">
-                                    <?php echo esc_html__('The FAQ metabox is shown in the post editor only when "Use FAQ metabox" is enabled.', 'ai-craft-post'); ?>
+                                    <?php echo esc_html__('The FAQ metabox is shown in the post editor only when "Use FAQ metabox" is enabled.', 'craftpost-site-connector'); ?>
                                 </p>
                             </div>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">
-                            <label for="<?php echo esc_attr(AI_CRAFT_POST_FAQ_CSS_OPTION); ?>"><?php echo esc_html__('FAQ CSS', 'ai-craft-post'); ?></label>
+                            <label for="<?php echo esc_attr(AI_CRAFT_POST_FAQ_CSS_OPTION); ?>"><?php echo esc_html__('FAQ CSS', 'craftpost-site-connector'); ?></label>
                         </th>
                         <td>
                             <textarea
@@ -870,7 +870,7 @@ class AI_Craft_Post_Plugin
                                 rows="18"
                                 class="large-text code"
                                 spellcheck="false"><?php echo esc_textarea($faq_css); ?></textarea>
-                            <p class="description"><?php echo esc_html__('CSS applied to the FAQ block displayed after post content.', 'ai-craft-post'); ?></p>
+                            <p class="description"><?php echo esc_html__('CSS applied to the FAQ block displayed after post content.', 'craftpost-site-connector'); ?></p>
                         </td>
                     </tr>
                 </table>
@@ -1003,7 +1003,7 @@ function ai_craft_post_extract_faq_items_from_content($content)
 }
 
 /**
- * Start AI Craft Post.
+ * Start CraftPost Site Connector.
  */
 function ai_craft_post_init()
 {
@@ -1012,7 +1012,7 @@ function ai_craft_post_init()
 add_action('plugins_loaded', 'ai_craft_post_init');
 
 /**
- * Allow AI Craft Post routes in Clearfy REST API whitelist.
+ * Allow CraftPost Site Connector routes in Clearfy REST API whitelist.
  */
 add_filter('clearfy_rest_api_white_list', function ($white_list) {
     if (!is_array($white_list)) {
@@ -1032,14 +1032,14 @@ add_filter('clearfy_rest_api_white_list', function ($white_list) {
         $white_list = array();
     }
 
-    $white_list[] = 'ai-craft-post';
+    $white_list[] = 'craftpost-site-connector';
     $white_list[] = 'ai-craft-post/v1';
 
     return array_values(array_unique($white_list));
 });
 
 /**
- * Activate AI Craft Post.
+ * Activate CraftPost Site Connector.
  */
 function ai_craft_post_activate()
 {
@@ -1047,7 +1047,7 @@ function ai_craft_post_activate()
 register_activation_hook(__FILE__, 'ai_craft_post_activate');
 
 /**
- * Deactivate AI Craft Post.
+ * Deactivate CraftPost Site Connector.
  */
 function ai_craft_post_deactivate()
 {

@@ -4,7 +4,7 @@ Tags: AI content, content automation, SEO, FAQ, Polylang
 Requires at least: 6.2
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -52,7 +52,7 @@ https://kinescope.io/embed/9z1h5x44N1cnxRaYmfW7rR
 
 == Installation ==
 
-1. Upload the `ai-craft-post` folder to `/wp-content/plugins/`, or install the plugin ZIP from **Plugins > Add New > Upload Plugin**.
+1. Upload the `craftpost-site-connector` folder to `/wp-content/plugins/`, or install the plugin ZIP from **Plugins > Add New > Upload Plugin**.
 2. Activate **CraftPost Site Connector**.
 3. Sign in to your CraftPost account and add the WordPress website.
 4. Copy the generated `aic_live` site key.
@@ -97,6 +97,11 @@ Yes. Deactivate the plugin to disable its REST routes. You can also replace the 
 
 == Changelog ==
 
+= 1.4.1 =
+
+* Changed the plugin slug and text domain to craftpost-site-connector for the WordPress.org submission.
+* Preserved existing settings, metadata keys, and REST API compatibility.
+
 = 1.4.0 =
 
 * Renamed plugin to CraftPost Site Connector.
@@ -121,6 +126,10 @@ Yes. Deactivate the plugin to disable its REST routes. You can also replace the 
 * Improved translated FAQ handling.
 
 == Upgrade Notice ==
+
+= 1.4.1 =
+
+Updates the WordPress.org slug while preserving existing CraftPost settings and API compatibility.
 
 = 1.4.0 =
 

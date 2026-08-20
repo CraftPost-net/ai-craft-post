@@ -94,7 +94,7 @@ CraftPost може надсилати до WordPress створений або �
 
 The Git repository is the development source. Approved WordPress.org releases are published separately to the WordPress.org SVN repository.
 
-Run the official Plugin Check before creating a release. Release ZIP files must contain the `ai-craft-post` directory and exclude Git metadata, local documentation, IDE settings, logs, and previous ZIP files.
+Run the official Plugin Check before creating a release. Release ZIP files must contain the `craftpost-site-connector` directory and exclude Git metadata, local documentation, IDE settings, logs, and previous ZIP files.
 
 ## License
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * AI Craft Post webhook handler.
+ * CraftPost Site Connector webhook handler.
  */
 
 if (!defined('ABSPATH')) {
@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Handles receiver webhooks from AI Craft Post.
+ * Handles receiver webhooks from CraftPost Site Connector.
  */
 class AI_Craft_Post_Webhook_Handler
 {

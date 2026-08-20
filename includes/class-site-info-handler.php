@@ -1,6 +1,6 @@
 <?php
 /**
- * AI Craft Post site info handler.
+ * CraftPost Site Connector site info handler.
  */
 
 if (!defined('ABSPATH')) {
@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Returns safe site information for AI Craft Post.
+ * Returns safe site information for CraftPost Site Connector.
  */
 class AI_Craft_Post_Site_Info_Handler
 {

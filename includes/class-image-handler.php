@@ -1,6 +1,6 @@
 <?php
 /**
- * AI Craft Post image handler.
+ * CraftPost Site Connector image handler.
  */
 
 if (!defined('ABSPATH')) {
