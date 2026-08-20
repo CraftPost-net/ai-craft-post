@@ -60,8 +60,8 @@ class AI_Craft_Post_Webhook_Handler
                 $post_content = rtrim($post_content) . "\n\n" . $this->render_faq_content($faq_schema_items, $faq_schema_title);
                 $faq_schema_items = array();
             }
-        } elseif ($faq_metabox_enabled && function_exists('ai_craft_post_extract_faq_items_from_content')) {
-            $faq_schema = ai_craft_post_extract_faq_items_from_content($post_content);
+        } elseif ($faq_metabox_enabled && function_exists('craftpost_site_connector_extract_faq_items_from_content')) {
+            $faq_schema = craftpost_site_connector_extract_faq_items_from_content($post_content);
             $post_content = $faq_schema['content'];
             $faq_schema_items = $faq_schema['items'];
             $faq_schema_title = $faq_schema['title'] ?? '';
@@ -370,12 +370,12 @@ class AI_Craft_Post_Webhook_Handler
             if ($operation === 'add_faq_schema') {
                 $faq_items = $this->sanitize_faq_schema_items($item['items'] ?? array());
                 $faq_title = sanitize_text_field((string) ($item['title'] ?? 'FAQ'));
-                if (empty($faq_items) && !empty($item['value']) && function_exists('ai_craft_post_extract_faq_items_from_content')) {
+                if (empty($faq_items) && !empty($item['value']) && function_exists('craftpost_site_connector_extract_faq_items_from_content')) {
                     $faq_html = $this->sanitize_post_content((string) $item['value']);
                     if (is_wp_error($faq_html)) {
                         return $faq_html;
                     }
-                    $extracted_faq = ai_craft_post_extract_faq_items_from_content($faq_html);
+                    $extracted_faq = craftpost_site_connector_extract_faq_items_from_content($faq_html);
                     $faq_items = $this->sanitize_faq_schema_items($extracted_faq['items'] ?? array());
                     if (!empty($extracted_faq['title'])) {
                         $faq_title = sanitize_text_field((string) $extracted_faq['title']);
@@ -404,10 +404,10 @@ class AI_Craft_Post_Webhook_Handler
                     return is_wp_error($value) ? $value : new WP_Error('empty_refresh_content', 'Refresh content cannot be empty', array('status' => 400));
                 }
                 if ($operation === 'add_faq' && (bool) get_option(AI_CRAFT_POST_FAQ_METABOX_ENABLED_OPTION, false)) {
-                    if (!function_exists('ai_craft_post_extract_faq_items_from_content')) {
+                    if (!function_exists('craftpost_site_connector_extract_faq_items_from_content')) {
                         return new WP_Error('refresh_faq_parser_missing', 'FAQ metabox parser is unavailable', array('status' => 500));
                     }
-                    $faq = ai_craft_post_extract_faq_items_from_content($value);
+                    $faq = craftpost_site_connector_extract_faq_items_from_content($value);
                     $faq_items = $this->sanitize_faq_schema_items($faq['items'] ?? array());
                     if (empty($faq_items)) {
                         return new WP_Error('empty_refresh_faq_schema', 'FAQ questions could not be extracted for the enabled FAQ metabox', array('status' => 400));
@@ -448,8 +448,8 @@ class AI_Craft_Post_Webhook_Handler
                     $skipped[] = $faq_operation;
                 }
             }
-            if (isset($clean_operations['add_sections']) && function_exists('ai_craft_post_extract_faq_items_from_content')) {
-                $clean_sections = ai_craft_post_extract_faq_items_from_content($clean_operations['add_sections']);
+            if (isset($clean_operations['add_sections']) && function_exists('craftpost_site_connector_extract_faq_items_from_content')) {
+                $clean_sections = craftpost_site_connector_extract_faq_items_from_content($clean_operations['add_sections']);
                 if (!empty($clean_sections['items'])) {
                     $clean_operations['add_sections'] = trim((string) ($clean_sections['content'] ?? ''));
                     if ($clean_operations['add_sections'] === '') {
@@ -940,8 +940,8 @@ class AI_Craft_Post_Webhook_Handler
             return true;
         }
 
-        if (function_exists('ai_craft_post_extract_faq_items_from_content')) {
-            $extracted = ai_craft_post_extract_faq_items_from_content((string) $content);
+        if (function_exists('craftpost_site_connector_extract_faq_items_from_content')) {
+            $extracted = craftpost_site_connector_extract_faq_items_from_content((string) $content);
             if (!empty($extracted['items']) && is_array($extracted['items'])) {
                 return true;
             }

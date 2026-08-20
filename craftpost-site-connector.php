@@ -908,7 +908,7 @@ class AI_Craft_Post_Plugin
 /**
  * Extract FAQ questions from the post content and return cleaned content.
  */
-function ai_craft_post_extract_faq_items_from_content($content)
+function craftpost_site_connector_extract_faq_items_from_content($content)
 {
     $content = (string) $content;
     $heading_pattern = '/((?:<!--\s*wp:heading(?:\s+\{.*?\})?\s*-->\s*)?<h2\b[^>]*>(.*?)<\/h2>\s*(?:<!--\s*\/wp:heading\s*-->\s*)?)/uis';
@@ -1028,11 +1028,11 @@ function ai_craft_post_extract_faq_items_from_content($content)
 /**
  * Start CraftPost Site Connector.
  */
-function ai_craft_post_init()
+function craftpost_site_connector_init()
 {
     AI_Craft_Post_Plugin::get_instance();
 }
-add_action('plugins_loaded', 'ai_craft_post_init');
+add_action('plugins_loaded', 'craftpost_site_connector_init');
 
 /**
  * Allow CraftPost Site Connector routes in Clearfy REST API whitelist.
@@ -1064,15 +1064,15 @@ add_filter('clearfy_rest_api_white_list', function ($white_list) {
 /**
  * Activate CraftPost Site Connector.
  */
-function ai_craft_post_activate()
+function craftpost_site_connector_activate()
 {
 }
-register_activation_hook(__FILE__, 'ai_craft_post_activate');
+register_activation_hook(__FILE__, 'craftpost_site_connector_activate');
 
 /**
  * Deactivate CraftPost Site Connector.
  */
-function ai_craft_post_deactivate()
+function craftpost_site_connector_deactivate()
 {
 }
-register_deactivation_hook(__FILE__, 'ai_craft_post_deactivate');
+register_deactivation_hook(__FILE__, 'craftpost_site_connector_deactivate');
