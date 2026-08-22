@@ -4,7 +4,7 @@ Tags: AI content, content automation, SEO, FAQ, Polylang
 Requires at least: 6.2
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -90,12 +90,18 @@ Yes. Deactivate the plugin to disable its REST routes. You can also replace the 
 
 == Screenshots ==
 
-1. CraftPost Site Connector connection and site-key settings.
-2. SEO integration settings.
-3. FAQ display and structured-data settings.
-4. FAQ editor metabox.
+1. Configure the CraftPost site key, SEO integration, and FAQ settings in WordPress.
+2. Customize FAQ display options and CSS, then save the connector settings.
+3. Add a WordPress website in the CraftPost dashboard and verify the connection.
+4. Add multiple article topics to the generation queue and configure their publishing settings.
+5. Choose an article template, review the generation settings and cost, and add the articles to the queue.
 
 == Changelog ==
+
+= 1.4.2 =
+
+* Updated WordPress compatibility metadata for WordPress 7.1.
+* Added WordPress.org directory artwork and expanded the plugin screenshots.
 
 = 1.4.1 =
 
@@ -132,6 +138,10 @@ Yes. Deactivate the plugin to disable its REST routes. You can also replace the 
 * Improved translated FAQ handling.
 
 == Upgrade Notice ==
+
+= 1.4.2 =
+
+Updates WordPress compatibility metadata for WordPress 7.1.
 
 = 1.4.1 =
 

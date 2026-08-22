@@ -3,7 +3,7 @@
  * Plugin Name: CraftPost Site Connector
  * Plugin URI: https://craftpost.net/
  * Description: Secure receiver and connector plugin for CraftPost content automation service.
- * Version: 1.4.1
+ * Version: 1.4.2
  * Requires at least: 6.2
  * Requires PHP: 7.4
  * Author: CraftPost
@@ -43,7 +43,7 @@ add_action('admin_notices', function () {
     echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__('CraftPost Site Connector was activated and the previous AI Craft Post version was automatically deactivated. Existing settings and content were preserved. You can now delete the previous plugin.', 'craftpost-site-connector') . '</p></div>';
 });
 
-define('AI_CRAFT_POST_VERSION', '1.4.1');
+define('AI_CRAFT_POST_VERSION', '1.4.2');
 define('AI_CRAFT_POST_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('AI_CRAFT_POST_PLUGIN_PATH', plugin_dir_path(__FILE__));
 define('AI_CRAFT_POST_SITE_KEY_OPTION', 'ai_craft_post_site_key');
